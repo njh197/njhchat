@@ -4,11 +4,10 @@ import socket
 import threading
 import time
 import sys
-import json
 import os
 import logging
 import platform
-import tomllib
+import toml
 import chatlib
 
 username=None
@@ -97,15 +96,15 @@ def scroll(event):
 try:
     if not os.path.exists("config.toml"):
         with open("config.toml",mode='w',encoding='utf8') as f:
-            f.write("""server_address = "47.97.49.128"
-port = 15432
-key = \"\"""")
+            f.write("")
         logger.info("Generated config.toml")
-    with open("config.toml",mode='rb') as f:
-        conf=tomllib.load(f)
+    with open("config.toml",encoding='utf8') as f:
+        conf=toml.load(f)
         conf["server_address"]=conf.get("server_address","47.97.49.128")
         conf["port"]=conf.get("port",15432)
         conf["key"]=conf.get("key","")
+    with open("config.toml",mode='w',encoding='utf8') as f:
+        toml.dump(conf,f)
     addr=(conf["server_address"],conf["port"])
     key=conf["key"]
 
