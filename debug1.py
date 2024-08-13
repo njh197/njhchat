@@ -12,16 +12,12 @@ last_received=""
 message=b""
 canv_y=0
 os_name=platform.system()
-logger = logging.getLogger('NJH Chat Client')
+logger = logging.getLogger('NJH Chat Debug')
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
 consoleHeader = logging.StreamHandler()
 consoleHeader.setFormatter(formatter)
-consoleHeader.setLevel(logging.INFO)
-fileHandler = logging.FileHandler(f"njhchat_client.log")
-fileHandler.setLevel(logging.DEBUG)
-fileHandler.setFormatter(formatter)
-logger.addHandler(fileHandler)
+consoleHeader.setLevel(logging.DEBUG)
 logger.addHandler(consoleHeader)
 def connect():
     global need_send,last_received,canv_y
@@ -31,10 +27,6 @@ def connect():
         logger.info(f"Connected to server {addr}")
         data=chatlib.get_all_message(sock)
         print(data)
-    except Exception as err:
-        logger.error(str(err))
-        messagebox.showerror(title="子线程发生错误!",message="请将以下报错信息发给njh197\n"+str(err))
-        on_closing()
     finally:
         sock.close()
 
