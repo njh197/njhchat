@@ -4,6 +4,7 @@ jobs:
     name: Build
     runs-on: windows-latest
     steps:
+    - uses: actions/checkout@v4
     - name: install_dependencies
       run: |
         python -m pip install toml
