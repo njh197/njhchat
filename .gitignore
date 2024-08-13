@@ -1,3 +1,4 @@
+config.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -22,7 +23,6 @@ var/
 wheels/
 share/python-wheels/
 *.egg-info/
-venv1/
 .installed.cfg
 *.egg
 MANIFEST
