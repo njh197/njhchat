@@ -1,6 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox
-import socket,threading,time,sys,json,os,logging,queue,platform
+import socket
+import threading
+import time
+import sys
+import json
+import os
+import logging
+import platform
 import chatlib
 
 username=None
@@ -8,31 +15,33 @@ addr=None
 key=None
 need_send=False
 need_close=False
-last_received=""
 message=b""
-canv_y=0
 os_name=platform.system()
 logger = logging.getLogger('NJH Chat Client')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
 consoleHeader = logging.StreamHandler()
 consoleHeader.setFormatter(formatter)
 consoleHeader.setLevel(logging.INFO)
-fileHandler = logging.FileHandler(f"njhchat_client.log")
+fileHandler = logging.FileHandler("njhchat_client.log")
 fileHandler.setLevel(logging.DEBUG)
 fileHandler.setFormatter(formatter)
 logger.addHandler(fileHandler)
 logger.addHandler(consoleHeader)
 def connect():
-    global need_send,last_received,canv_y
+    global need_send
+    last_received=""
+    canv_y=0
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         sock.connect(addr)
-        logger.info(f"Connected to server {addr}")
-        old_message=chatlib.get_all_message(sock)
+        logger.info("Connected to server %s:%d",addr[0],addr[1])
+        old_message=[i.decode(encoding="utf8") for i in chatlib.get_all_message(sock)]
         if old_message:
             logger.debug(repr(old_message))
-            text1.append(canvas.create_text(1,canv_y,text="\n".join(old_message),anchor=tk.NW,font=("宋体",20)))
+            text1.append(canvas.create_text(1,canv_y,
+                                            text="\n".join(old_message),
+                                            anchor=tk.NW,font=("宋体",20)))
             canv_y=canvas.bbox(text1[-1])[3]
             canvas.update_idletasks()
             canvas.config(scrollregion=canvas.bbox("all"))
@@ -45,7 +54,7 @@ def connect():
                 need_send=False
             data=chatlib.receive(sock)
             data=data.decode(encoding='utf8')
-            if last_received!=data and data!='\n':
+            if data not in (last_received,'\n'):
                 text1.append(canvas.create_text(1,canv_y,text=data,anchor=tk.NW,font=("宋体",20)))
                 canv_y=canvas.bbox(text1[-1])[3]
                 canvas.update_idletasks()
@@ -55,9 +64,9 @@ def connect():
             if need_close:
                 break
             time.sleep(0.2)
-    except Exception as err:
-        logger.error(str(err))
-        messagebox.showerror(title="子线程发生错误!",message="请将以下报错信息发给njh197\n"+str(err))
+    except Exception as err2:
+        logger.error(str(err2))
+        messagebox.showerror(title="子线程发生错误!",message="请将以下报错信息发给njh197\n"+str(err2))
         on_closing()
     finally:
         sock.close()
@@ -70,9 +79,8 @@ def send_message():
         need_send=True
 
 def finish_login():
-    global username,key,addr
+    global username,key
     username=entry1.get()
-    key=entry2.get()
     login.destroy()
     #print(username,pwd,addr)
 
@@ -84,36 +92,32 @@ def on_closing():
 def scroll(event):
     if os_name=="Windows":
         canvas.yview_scroll(-1 * int(event.delta/120),"units")
-    elif os_name=="Linux":
-        canvas.yview_scroll((-1)*event.delta)
 
 try:
     if not os.path.exists("config.json"):
-        with open("config.json",mode='w') as f:
+        with open("config.json",mode='w',encoding='utf8') as f:
             f.write("{}")
         logger.info("Generated config.json")
-    with open("config.json") as f:
+    with open("config.json",encoding='utf8') as f:
         conf=json.load(f)
-    with open("config.json",mode='w') as f:
+    with open("config.json",mode='w',encoding='utf8') as f:
         conf["server_address"]=conf.get("server_address","47.97.49.128")
         conf["port"]=conf.get("port",15432)
+        conf["key"]=conf.get("key","")
         json.dump(conf,f)
     addr=(conf["server_address"],conf["port"])
+    key=conf["key"]
 
     #登录界面
     login=tk.Tk()
-    login.geometry("430x140")
+    login.geometry("430x100")
     login.title("NJH Chat Login")
     label1=tk.Label(login,text="请输入用户名:")
     entry1=tk.Entry(login,font=("宋体",25))
-    label2=tk.Label(login,text="请输入密钥:")
-    entry2=tk.Entry(login,font=("宋体",25))
     login_button=tk.Button(login,text="确定",font=("宋体",25),command=finish_login)
     label1.grid(row=0,column=0)
     entry1.grid(row=0,column=1)
-    label2.grid(row=1,column=0)
-    entry2.grid(row=1,column=1)
-    login_button.grid(row=3,column=0,columnspan=2)
+    login_button.grid(row=1,column=0,columnspan=2)
     login.mainloop()
     if username is None:
         sys.exit(0)

@@ -24,18 +24,18 @@ def receive(sock,code=b'\x01'):
 
 def get_all_message(sock,debug=False):
     if not debug:
-        aa=receive(sock,b'\x03')
+        aa = receive(sock, b'\x03')
     else:
-        aa=b'\x02\x00\x00\x00\x00\x00\x00\x10abcdefghijabcdef\x02\x00\x00\x00\x00\x00\x00\x0A1234567890'
-    ls=[]
-    i=0
-    while i<len(aa):
-        head=aa[i+1:i+8]
-        i+=8
+        aa = b'\x02\x00\x00\x00\x00\x00\x00\x10abcdefghijabcdef\x02\x00\x00\x00\x00\x00\x00\x0A1234567890'
+    ls = []
+    i = 0
+    while i < len(aa):
+        head = aa[i+1:i+8]
+        i += 8
         length = int.from_bytes(head, byteorder="big", signed=False)
-        body=aa[i:i+length]
-        i+=length
-        ls.append(body.decode(encoding="utf8"))
+        body = aa[i:i+length]
+        i += length
+        ls.append(body)
     return ls
     
 if __name__ == '__main__':
