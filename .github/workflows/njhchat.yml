@@ -7,17 +7,17 @@ jobs:
     - uses: actions/checkout@v4
     - name: install_dependencies
       run: |
-        python -m pip install toml
-        python -m pip install pyinstaller
-        python -m pip install pycryptodome
+        python -m pip install -r requirements.txt
+    - name: build
+      run: |
         pyinstaller -F -w client.py
         pyinstaller -F -w server.py
-    - name: upload_artifacts
+    - name: upload_client_artifacts
       uses: actions/upload-artifact@v4
       with:
         name: njhchat_client
         path: dist/client.exe
-    - name: upload_artifacts
+    - name: upload_server_artifacts
       uses: actions/upload-artifact@v4
       with:
         name: njhchat_server

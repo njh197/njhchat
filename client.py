@@ -100,7 +100,7 @@ try:
         logger.info("Generated config.toml")
     with open("config.toml",encoding='utf8') as f:
         conf=toml.load(f)
-        conf["server_address"]=conf.get("server_address","47.97.49.128")
+        conf["server_address"]=conf.get("server_address","127.0.0.1")
         conf["port"]=conf.get("port",15432)
         conf["key"]=conf.get("key","")
     with open("config.toml",mode='w',encoding='utf8') as f:
