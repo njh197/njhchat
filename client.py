@@ -23,7 +23,7 @@ formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
 consoleHeader = logging.StreamHandler()
 consoleHeader.setFormatter(formatter)
 consoleHeader.setLevel(logging.INFO)
-fileHandler = logging.FileHandler("njhchat_client.log")
+fileHandler = logging.FileHandler("njhchat_client.log",encoding="utf8")
 fileHandler.setLevel(logging.DEBUG)
 fileHandler.setFormatter(formatter)
 logger.addHandler(fileHandler)
@@ -92,6 +92,8 @@ def on_closing():
 def scroll(event):
     if os_name=="Windows":
         canvas.yview_scroll(-1 * int(event.delta/120),"units")
+    if os_name=="Linux":
+        canvas.yview_scroll((-1) * event.delta,"units")
 
 try:
     if not os.path.exists("config.json"):

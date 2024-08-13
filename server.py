@@ -1,5 +1,5 @@
 from socketserver import ThreadingTCPServer, BaseRequestHandler
-import chatlib,logging,queue,json
+import chatlib,logging
 new_message=[b'']
 logger = logging.getLogger('NJH Chat Server')
 logger.setLevel(logging.DEBUG)
@@ -7,7 +7,7 @@ formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
 consoleHeader = logging.StreamHandler()
 consoleHeader.setFormatter(formatter)
 consoleHeader.setLevel(logging.DEBUG)
-fileHandler = logging.FileHandler("njhchat_server.log")
+fileHandler = logging.FileHandler("njhchat_server.log",encoding="utf8")
 fileHandler.setLevel(logging.DEBUG)
 fileHandler.setFormatter(formatter)
 logger.addHandler(fileHandler)
