@@ -8,6 +8,8 @@ import os
 import logging
 import platform
 import toml
+from plyer import notification
+
 import chatlib
 
 username=None
@@ -22,7 +24,7 @@ logger.setLevel(logging.INFO)
 formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
 consoleHeader = logging.StreamHandler()
 consoleHeader.setFormatter(formatter)
-consoleHeader.setLevel(logging.INFO)
+consoleHeader.setLevel(logging.DEBUG)
 fileHandler = logging.FileHandler("njhchat_client.log",encoding="utf8")
 fileHandler.setLevel(logging.DEBUG)
 fileHandler.setFormatter(formatter)
@@ -61,6 +63,9 @@ def connect():
                 canvas.config(scrollregion=canvas.bbox("all"))
                 canvas.yview_moveto(1.0)
                 last_received=data
+                logger.debug(root.state())
+                if root.state()=="iconic":
+                    notification.notify(title="NJH Chat",message=data,timeout=1)
             if need_close:
                 break
             time.sleep(0.2)
