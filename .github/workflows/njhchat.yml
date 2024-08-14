@@ -14,5 +14,6 @@ jobs:
         pyinstaller -F -w server.py
     - name: upload_artifacts
       uses: actions/upload-artifact@v4
-      - name: njhchat
+      with:
+        name: njhchat
         path: dist/
