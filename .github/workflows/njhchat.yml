@@ -12,13 +12,7 @@ jobs:
       run: |
         pyinstaller -F -w client.py
         pyinstaller -F -w server.py
-    - name: upload_client_artifacts
+    - name: upload_artifacts
       uses: actions/upload-artifact@v4
-      with:
-        name: njhchat_client
-        path: dist/client.exe
-    - name: upload_server_artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: njhchat_server
-        path: dist/server.exe
+        name: njhchat
+        path: dist/
