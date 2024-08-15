@@ -10,7 +10,7 @@ jobs:
         python -m pip install -r requirements.txt
     - name: generate_exe
       run: |
-        pyinstaller -F -w client.py
+        pyinstaller -F -w client.py --hidden-import plyer.platforms.win.notification
         pyinstaller -F server.py
     - name: upload_artifacts
       uses: actions/upload-artifact@v4
