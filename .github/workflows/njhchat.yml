@@ -11,7 +11,7 @@ jobs:
     - name: generate_exe
       run: |
         pyinstaller -F -w client.py
-        pyinstaller -F -w server.py
+        pyinstaller -F server.py
     - name: upload_artifacts
       uses: actions/upload-artifact@v4
       with:
