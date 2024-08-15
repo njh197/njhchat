@@ -83,7 +83,7 @@ def send_message():
         message=bytes(f"<{username}> {message}",encoding='utf8')
         need_send=True
 
-def finish_login():
+def finish_login(*args):
     global username
     username=entry1.get()
     login.destroy()
@@ -119,6 +119,7 @@ try:
     login.title("NJH Chat Login")
     label1=tk.Label(login,text="请输入用户名:")
     entry1=tk.Entry(login,font=("宋体",25))
+    entry1.bind("<Return>",finish_login)
     login_button=tk.Button(login,text="确定",font=("宋体",25),command=finish_login)
     label1.grid(row=0,column=0)
     entry1.grid(row=0,column=1)
